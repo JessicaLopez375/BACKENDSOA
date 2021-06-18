@@ -20,33 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edu.iua.business.IUserBusiness;
 import com.edu.iua.business.exception.BusinessException;
 import com.edu.iua.business.exception.NotFoundException;
-import com.edu.iua.model.Alarma;
-import com.edu.iua.model.Camion;
 import com.edu.iua.model.User;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
-
-
 @RestController
-@RequestMapping(value = Constantes.URL_USER)
-@Api(value = "Usuarios", description = "Operaciones relacionadas con la creacion,modifiacion y eliminacion de usuarios", tags = { "Autenticación" })
+@RequestMapping(value = Constantes.URL_USERS)
 public class UserRestController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private IUserBusiness userBusiness;
-	
-	@ApiOperation(value="Obtener un usuario mediante su ID", response = User.class)
-
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 404, message = "No se encuentra el usuario"), 
-			@ApiResponse(code = 500, message = "Error interno del servidor") 
-	})
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> load(@PathVariable("id") Long id) {
@@ -60,13 +43,6 @@ public class UserRestController {
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@ApiOperation(value="Obtener todos los usuarios almacenados en la base de datos", response = User.class)
-
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 500, message = "Error interno del servidor") 
-	})
 
 	@GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<User>> list() {
@@ -79,35 +55,19 @@ public class UserRestController {
 			return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	@ApiOperation(value="Guardar un nuevo usuario en la base de datos", response = User.class)
-
-	@ApiResponses(value = { 
-			@ApiResponse(code = 201, message = "Usuario creado exitosamente"),
-			@ApiResponse(code = 400, message = "Algun valor ingresado es incorrecto"),
-			@ApiResponse(code = 500, message = "Error interno del servidor") 
-	})
 
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> add(@RequestBody User user) {
 		try {
 			userBusiness.add(user);
 			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.set("location", Constantes.URL_USER + "/" + user.getId());
+			responseHeaders.set("location", Constantes.URL_USERS + "/" + user.getId());
 			return new ResponseEntity<String>(responseHeaders, HttpStatus.CREATED);
 		} catch (BusinessException e) {
 			log.error(e.getMessage(), e);
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	@ApiOperation(value="Actualizar los datos de un usuario", response = Camion.class)
-
-	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Operación exitosa"),
-			@ApiResponse(code = 404, message = "No se encuentra el usuario"), 
-			@ApiResponse(code = 500, message = "Error interno del servidor") 
-	})
 
 	@PutMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> update(@RequestBody User user) {

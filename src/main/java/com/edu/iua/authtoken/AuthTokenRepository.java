@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.edu.iua.authtoken.AuthToken;
-
 @Repository
 public interface AuthTokenRepository extends JpaRepository<AuthToken, String>{
 	
